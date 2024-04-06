@@ -17,7 +17,7 @@
 // export REDDIT_PASSWORD=yourRedditPassword
 
 // Import required modules from Deno
-import { encodeBase64 } from "https://deno.land/std/encoding/base64.ts";
+import { encodeBase64 } from "https://deno.land/std@0.221.0/encoding/base64.ts";
 
 const subreddit = "boston"; // Example subreddit
 
