@@ -19,28 +19,31 @@
 // Import required modules from Deno
 import { encodeBase64 } from "https://deno.land/std/encoding/base64.ts";
 
-// Reddit API credentials and subreddit from environment variables
-const clientId = Deno.env.get("REDDIT_CLIENT_ID");
-const clientSecret = Deno.env.get("REDDIT_CLIENT_SECRET");
 const subreddit = "boston"; // Example subreddit
-
-if (!clientId || !clientSecret) {
-    console.error("Reddit API credentials are not set in environment variables.");
-    Deno.exit(1);
-}
-
-// Encode clientId and clientSecret for Basic Auth
-const credentials = encodeBase64(`${clientId}:${clientSecret}`);
 
 // Function to obtain an OAuth2 token
 async function getRedditOAuthToken(): Promise<string> {
+    // Reddit API credentials from environment variables
+    const clientId = Deno.env.get("REDDIT_CLIENT_ID");
+    const clientSecret = Deno.env.get("REDDIT_CLIENT_SECRET");
+    const username = Deno.env.get("REDDIT_USERNAME"); // The user's Reddit username
+    const password = Deno.env.get("REDDIT_PASSWORD"); // The user's Reddit password
+
+    if (!clientId || !clientSecret || !username || !password) {
+        console.error("One or more necessary environment variables are not set.");
+        Deno.exit(1);
+    }
+
+    // Encode clientId and clientSecret for Basic Auth using Deno's encodeBase64
+    const credentials = encodeBase64(`${clientId}:${clientSecret}`);
+
     const response = await fetch("https://www.reddit.com/api/v1/access_token", {
         method: "POST",
         headers: {
             "Authorization": `Basic ${credentials}`,
             "Content-Type": "application/x-www-form-urlencoded"
         },
-        body: "grant_type=client_credentials"
+        body: `grant_type=password&username=${username}&password=${password}&scope=read`
     });
 
     if (!response.ok) {
@@ -48,6 +51,7 @@ async function getRedditOAuthToken(): Promise<string> {
     }
 
     const data = await response.json();
+    console.log(data);
     return data.access_token;
 }
 
