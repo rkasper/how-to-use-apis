@@ -21,7 +21,9 @@ async function fetchCountryData() {
 
         // Check if the request was successful
         if (!response.ok) {
-            throw new Error(`HTTP error! Status: ${response.status}`);
+            // Log the error and possibly return or handle it differently
+            console.error(`HTTP error! Status: ${response.status}`);
+            return; // Early return or set an error state
         }
 
         // Parse the JSON response
