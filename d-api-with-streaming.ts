@@ -27,4 +27,4 @@ async function generateLoremIpsumStreaming() {
     }
 }
 
-generateLoremIpsumStreaming();
+await generateLoremIpsumStreaming();
